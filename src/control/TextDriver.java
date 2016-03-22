@@ -1,5 +1,8 @@
 package control;
 
+import javafx.application.Application;
+
+import java.io.NotActiveException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -11,12 +14,12 @@ import java.util.Scanner;
  */
 public class TextDriver {
     private boolean running = true;
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, NotActiveException {
         TextDriver driver = new TextDriver();
         driver.run();
     }
 
-    public void run() throws SQLException {
+    public void run() throws SQLException, NotActiveException {
         while (running) {
             printOptions();
             Scanner scanner = new Scanner(System.in);
@@ -32,6 +35,13 @@ public class TextDriver {
 
                 case 3:
 
+                    break;
+
+                case 7:
+                    if(ConnectionDriver.getInstance().getConnection() != null) {
+                        ConnectionDriver.getInstance().getConnection().close();
+                    }
+                    System.exit(0);
                     break;
             }
         }
@@ -51,9 +61,11 @@ public class TextDriver {
     private void printAllComponents() throws SQLException {
         ResultSet rs;
         rs = DatabaseManager.getInstance().fetchAllFromTable("components");
-        System.out.println("Name\t\t\t| Amount\t| Type");
+        System.out.format("%40s%10s%14s","Name","Amount","Type");
+        System.out.println();
         while (rs.next()) {
-            System.out.println(rs.getString("name") + "\t\t\t| " +rs.getInt("amount") + "\t| " + rs.getString("kind"));
+            System.out.format("%40s%10d%14s", rs.getString("name"),rs.getInt("amount"),rs.getString("kind"));
+            System.out.println();
         }
     }
 }
