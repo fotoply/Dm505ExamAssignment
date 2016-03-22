@@ -15,7 +15,7 @@ public class ConnectionDriver {
     private String url = "jdbc:postgresql://localhost:5432/testdb";
 
     private static ConnectionDriver instance;
-    private static Connection connection = null;
+    private Connection connection = null;
 
     public static ConnectionDriver getInstance() {
         if (instance == null) {
@@ -39,7 +39,7 @@ public class ConnectionDriver {
         System.out.println("Opened database successfully");
     }
 
-    public static Connection getConnection() throws NotActiveException {
+    public Connection getConnection() throws NotActiveException {
         if (connection == null) {
             throw new NotActiveException("No database connection is established");
         } else {
