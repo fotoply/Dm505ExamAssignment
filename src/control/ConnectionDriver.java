@@ -1,7 +1,6 @@
 package control;
 
 import java.io.*;
-import java.nio.channels.NotYetConnectedException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
