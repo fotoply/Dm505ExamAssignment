@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 
 /**
  * Created 3/22/16
@@ -33,6 +34,16 @@ public class DatabaseManager {
     public ResultSet fetchAllFromTable(String tableName) throws SQLException {
         Statement statement = query.createStatement();
         return statement.executeQuery("SELECT * from " + tableName +";");
+    }
+
+    public ResultSet getComponent(int componentId) throws SQLException {
+        Statement statement = query.createStatement();
+        ResultSet component = statement.executeQuery("SELECT * FROM components WHERE componentid=" + componentId + " LIMIT 1;");
+        if (component.next()) {
+            String otherTable = component.getString("kind");
+            return statement.executeQuery("SELECT * FROM components natural join cpu WHERE componentid=" + componentId + ";");
+        }
+        return null;
     }
 
 }
