@@ -11,7 +11,9 @@ import java.sql.DriverManager;
  * @author Niels Norberg
  */
 public class ConnectionDriver {
-    private String password;
+    private String username = "postgres";
+    private String password = "123";
+    private String url = "jdbc:postgresql://localhost:5432/testdb";
 
     private static ConnectionDriver instance;
     private static Connection connection = null;
@@ -29,7 +31,7 @@ public class ConnectionDriver {
     public void connect() {
         try {
             Class.forName("org.postgresql.Driver");
-            connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/testdb", "postgres", "123");
+            connection = DriverManager.getConnection(url, username, password);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName()+": "+e.getMessage());
@@ -44,5 +46,17 @@ public class ConnectionDriver {
         } else {
             return connection;
         }
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }
