@@ -20,6 +20,7 @@ public class TextDriver {
     }
 
     public void run() throws SQLException, NotActiveException {
+        DatabaseManager.getInstance();
         while (running) {
             printOptions();
             Scanner scanner = new Scanner(System.in);
