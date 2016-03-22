@@ -24,12 +24,8 @@ public class DatabaseManager {
     }
 
     private DatabaseManager() {
-        try {
             ConnectionDriver.getInstance().connect();
             query = ConnectionDriver.getInstance().getConnection();
-        } catch (NotActiveException e) {
-            e.printStackTrace();
-        }
     }
 
     public ResultSet fetchAllFromTable(String tableName) throws SQLException {

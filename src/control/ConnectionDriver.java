@@ -39,12 +39,8 @@ public class ConnectionDriver {
         System.out.println("Opened database successfully");
     }
 
-    public Connection getConnection() throws NotActiveException {
-        if (connection == null) {
-            throw new NotActiveException("No database connection is established");
-        } else {
-            return connection;
-        }
+    public Connection getConnection() {
+        return connection;
     }
 
     public void setUsername(String username) {
