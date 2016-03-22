@@ -21,28 +21,28 @@ public class WindowRootController {
     private ComboBox<String> componentTypeBox;
 
     @FXML
-    private TableColumn<?, ?> componentNameColumn;
+    private TableColumn<?, String> componentNameColumn;
 
     @FXML
-    private TableColumn<?, ?> componentAmontColumn;
+    private TableColumn<?, Integer> componentAmontColumn;
 
     @FXML
-    private TableColumn<?, ?> componentFinalPriceColumn;
+    private TableColumn<?, Integer> componentFinalPriceColumn;
 
     @FXML
-    private TableColumn<?, ?> componentPriceColumn;
+    private TableColumn<?, Integer> componentPriceColumn;
 
     @FXML
-    private TableColumn<?, ?> systemsNameColumn;
+    private TableColumn<?, String > systemsNameColumn;
 
     @FXML
-    private TableColumn<?, ?> computerBuildableColumn;
+    private TableColumn<?, Integer> computerBuildableColumn;
 
     @FXML
-    private TableColumn<?, ?> computerFinalPriceColumn;
+    private TableColumn<?, Integer> computerFinalPriceColumn;
 
     @FXML
-    private TableColumn<?, ?> computerPriceColumn;
+    private TableColumn<?, Integer> computerPriceColumn;
 
     @FXML
     private TableView<?> RestockingTable;

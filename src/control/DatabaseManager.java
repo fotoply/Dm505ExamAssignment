@@ -48,9 +48,20 @@ public class DatabaseManager {
         ResultSet component = statement.executeQuery("SELECT * FROM components WHERE componentid=" + componentId + " LIMIT 1;");
         if (component.next()) {
             String otherTable = component.getString("kind");
-            return statement.executeQuery("SELECT * FROM components natural join cpu WHERE componentid=" + componentId + ";");
+            return statement.executeQuery("SELECT * FROM components natural join " + otherTable + " WHERE componentid=" + componentId + ";");
         }
         return null;
+    }
+
+    /**
+     * Returns all components of the given kind, plus extended data for these.
+     * @param kind
+     * @return
+     * @throws SQLException
+     */
+    public ResultSet getComponents(String kind) throws SQLException {
+        Statement statement = query.createStatement();
+        return statement.executeQuery("SELECT * FROM components natural join " + kind + " WHERE kind=" + kind + ";");
     }
 
 }
