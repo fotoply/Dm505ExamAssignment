@@ -30,11 +30,23 @@ public class TextDriver {
                     break;
 
                 case 2:
-
+                    printAllSystems();
                     break;
 
                 case 3:
+                    printPrices();
+                    break;
 
+                case 4:
+                    // TODO
+                    break;
+
+                case 5:
+                    // TODO
+                    break;
+
+                case 6:
+                    printRestockingList();
                     break;
 
                 case 7:
@@ -45,6 +57,10 @@ public class TextDriver {
                     break;
             }
         }
+    }
+
+    private void printRestockingList() {
+        // TODO
     }
 
     private void printOptions() {
@@ -67,5 +83,13 @@ public class TextDriver {
             System.out.format("%40s%10d%14s", rs.getString("name"),rs.getInt("amount"),rs.getString("kind"));
             System.out.println();
         }
+    }
+
+    private void printAllSystems() {
+        // TODO
+    }
+
+    private void printPrices() {
+        // TODO
     }
 }
