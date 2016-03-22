@@ -21,6 +21,9 @@ public class WindowRootController {
     private ComboBox<String> componentTypeBox;
 
     @FXML
+    private TableView<?> componentTable;
+
+    @FXML
     private TableColumn<?, String> componentNameColumn;
 
     @FXML
@@ -55,7 +58,15 @@ public class WindowRootController {
 
     @FXML
     void componentTypeChanged(ActionEvent event) {
+        switch (componentTypeBox.valueProperty().get()) {
+            case "All":
 
+                break;
+
+            case "CPU":
+                //componentTable.setItems();
+                break;
+        }
     }
 
     @FXML

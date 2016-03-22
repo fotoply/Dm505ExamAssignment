@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="view.WindowRootController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.40" xmlns:fx="http://javafx.com/fxml/1" fx:controller="WindowRootController">
    <children>
       <TabPane layoutX="14.0" layoutY="20.0" prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <tabs>
@@ -28,7 +28,7 @@
                            <children>
                               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select component type:" GridPane.halignment="RIGHT" GridPane.valignment="CENTER" />
                               <ComboBox fx:id="componentTypeBox" onAction="#componentTypeChanged" prefHeight="26.0" prefWidth="161.0" promptText="CPU" GridPane.columnIndex="1" />
-                              <TableView prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                              <TableView fx:id="componentTable" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
                                 <columns>
                                   <TableColumn fx:id="componentNameColumn" prefWidth="209.0" text="Component name" />
                                   <TableColumn fx:id="componentAmontColumn" prefWidth="122.0" text="Amount" />
