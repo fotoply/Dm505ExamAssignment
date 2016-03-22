@@ -36,6 +36,13 @@ public class DatabaseManager {
         return statement.executeQuery("SELECT * from " + tableName +";");
     }
 
+    /**
+     * Returns a component based on the given componentId. Automatically infers the table from which to get the extra information for the component.
+     * Will return null if no component is found.
+     * @param componentId
+     * @return
+     * @throws SQLException
+     */
     public ResultSet getComponent(int componentId) throws SQLException {
         Statement statement = query.createStatement();
         ResultSet component = statement.executeQuery("SELECT * FROM components WHERE componentid=" + componentId + " LIMIT 1;");

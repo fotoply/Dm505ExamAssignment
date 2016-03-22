@@ -18,7 +18,7 @@ public class WindowRootController {
     private URL location;
 
     @FXML
-    private ComboBox<?> componentTypeBox;
+    private ComboBox<String> componentTypeBox;
 
     @FXML
     private TableColumn<?, ?> componentNameColumn;
@@ -65,5 +65,12 @@ public class WindowRootController {
 
     @FXML
     void initialize() {
+        componentTypeBox.getItems().add("All");
+        componentTypeBox.getItems().add("CPU");
+        componentTypeBox.getItems().add("Graphics card");
+        componentTypeBox.getItems().add("Mainboard");
+        componentTypeBox.getItems().add("Case");
+        componentTypeBox.getItems().add("RAM");
+
     }
 }

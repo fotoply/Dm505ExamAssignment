@@ -1,9 +1,12 @@
 package control;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import view.WindowRootController;
+
+import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -12,9 +15,16 @@ import java.sql.DriverManager;
  *
  * @author Niels Norberg
  */
-public class MainDriver {
+public class MainDriver extends Application {
+
     public static void main(String[] args) {
-        ConnectionDriver connectionDriver = ConnectionDriver.getInstance();
-        connectionDriver.connect();
+        launch(args);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/view/WindowRoot.fxml"));
+        primaryStage.setScene(new Scene(loader.load()));
+        primaryStage.show();
     }
 }
