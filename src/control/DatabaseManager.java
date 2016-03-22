@@ -61,4 +61,14 @@ public class DatabaseManager {
         return statement.executeQuery("SELECT * FROM components natural join " + kind + " WHERE kind=" + kind + ";");
     }
 
+    public boolean isInStock(String name) throws SQLException {
+        Statement statement = query.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM components WHERE name='" + name + "' AND amount > 0");
+        if(rs.next()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

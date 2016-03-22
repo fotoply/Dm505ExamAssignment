@@ -38,11 +38,18 @@ public class TextDriver {
                     break;
 
                 case 4:
-                    // TODO
+                    // TODO Price offer
                     break;
 
                 case 5:
-                    // TODO
+                    // TODO Sell component
+                    System.out.println("Please type the name of the component to sell: ");
+                    String name = scanner.next();
+                    if(DatabaseManager.getInstance().isInStock(name)) {
+
+                    } else {
+                        System.out.println("Unable to sell as none is in stock.");
+                    }
                     break;
 
                 case 6:
