@@ -61,6 +61,11 @@ public class DatabaseManager {
         return statement.executeQuery("SELECT * FROM components natural join " + kind + " WHERE kind=" + kind + ";");
     }
 
+    public ResultSet getAllComponentsOrdered() throws SQLException {
+        Statement statement = query.createStatement();
+        return statement.executeQuery("SELECT name, kind, price FROM components ORDER BY kind, price");
+    }
+
     public boolean isInStock(String name) throws SQLException {
         Statement statement = query.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM components WHERE name='" + name + "' AND amount > 0");

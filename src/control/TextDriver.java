@@ -13,13 +13,14 @@ import java.util.Scanner;
  * @author Niels Norberg
  */
 public class TextDriver {
+    public static final double PRICEMULTIPLIER = 1.3;
     private boolean running = true;
-    public static void main(String[] args) throws SQLException, NotActiveException {
+    public static void main(String[] args) throws SQLException {
         TextDriver driver = new TextDriver();
         driver.run();
     }
 
-    public void run() throws SQLException, NotActiveException {
+    public void run() throws SQLException {
         DatabaseManager.getInstance();
         while (running) {
             printOptions();
@@ -97,7 +98,14 @@ public class TextDriver {
         // TODO
     }
 
-    private void printPrices() {
-        // TODO
+    private void printPrices() throws SQLException {
+        ResultSet allItems = DatabaseManager.getInstance().getAllComponentsOrdered();
+        System.out.println("Components: \n");
+        System.out.format("%40s%10s%14s","Name","Price","Type");
+        System.out.println();
+        while (allItems.next()) {
+            System.out.format("%40s%10.1f%14s", allItems.getString("name"),allItems.getInt("price")*PRICEMULTIPLIER,allItems.getString("kind"));
+            System.out.println();
+        }
     }
 }
