@@ -81,4 +81,12 @@ public class DatabaseManager {
         return rs.getInt(1);
     }
 
+    public void sellComponent()  {
+        // TODO
+    }
+
+    public void sellComputerSystem() {
+        // TODO
+    }
+
 }
