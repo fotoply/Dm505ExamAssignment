@@ -1,11 +1,9 @@
 package control;
 
-import java.io.NotActiveException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashMap;
 
 /**
  * Created 3/22/16
@@ -74,6 +72,13 @@ public class DatabaseManager {
         } else {
             return false;
         }
+    }
+
+    public int maxBuildable(String name) throws SQLException {
+        Statement statement = query.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT min(amount) FROM (SELECT amount FROM components c WHERE exists (SELECT ramid,caseid,mainboardid,graphicsid,cpuid FROM computersystems WHERE name=" + name + " AND (c.componentid=ramid OR c.componentid=caseid OR c.componentid=mainboardid OR c.componentid=graphicsid OR c.componentid=cpuid))) AS sub1;");
+        rs.next();
+        return rs.getInt(1);
     }
 
 }
