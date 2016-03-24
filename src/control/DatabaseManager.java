@@ -81,12 +81,27 @@ public class DatabaseManager {
         return rs.getInt(1);
     }
 
-    public void sellComponent()  {
-        // TODO
+    public void sellComponent(String name) throws SQLException {
+        Statement statement = query.createStatement();
+        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name="+name+")-1 WHERE name="+name+";");
     }
 
-    public void sellComputerSystem() {
+
+    public void sellComponent(int componentId) throws SQLException {
+        Statement statement = query.createStatement();
+        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where componentid="+componentId+")-1 WHERE componentid="+componentId+";");
+    }
+
+
+    public void sellComputerSystem(String systemName) throws SQLException {
         // TODO
+        Statement statement = query.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name="+systemName+";");
+        for (int i = 2; i < 7; i++) {
+            if(rs.getObject(i) != null) {
+                sellComponent(rs.getInt(i));
+            }
+        }
     }
 
 }
