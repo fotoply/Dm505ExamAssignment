@@ -97,6 +97,7 @@ public class DatabaseManager {
         // TODO
         Statement statement = query.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='"+systemName+"';");
+        rs.next();
         for (int i = 2; i < 7; i++) {
             if(rs.getObject(i) != null) {
                 sellComponent(rs.getInt(i));

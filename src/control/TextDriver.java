@@ -45,11 +45,13 @@ public class TextDriver {
                     while(true) {
                         System.out.println("Type 1 to sell a component, 2 to sell a complete system and 3 to abort:");
                         choice = scanner.nextInt();
+                        scanner.nextLine();
                         if(choice == 1) {
                             System.out.println("Please type the name of the component to sell: ");
                             String name = scanner.nextLine();
                             if(DatabaseManager.getInstance().isInStock(name)) {
                                 DatabaseManager.getInstance().sellComponent(name);
+                                System.out.println("One " + name + " was sold.");
                             } else {
                                 System.out.println("Unable to sell as none is in stock.");
                             }
@@ -59,6 +61,7 @@ public class TextDriver {
                             String name = scanner.nextLine();
                             if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
                                 DatabaseManager.getInstance().sellComputerSystem(name);
+                                System.out.println("One " + name + " was sold.");
                             } else {
                                 System.out.println("Unable to sell as some components are not in stock");
                             }
