@@ -47,7 +47,7 @@ public class TextDriver {
                         choice = scanner.nextInt();
                         if(choice == 1) {
                             System.out.println("Please type the name of the component to sell: ");
-                            String name = scanner.next();
+                            String name = scanner.nextLine();
                             if(DatabaseManager.getInstance().isInStock(name)) {
                                 DatabaseManager.getInstance().sellComponent(name);
                             } else {
@@ -56,7 +56,7 @@ public class TextDriver {
                             break;
                         } else if(choice == 2) {
                             System.out.println("Please type the name of the component to sell: ");
-                            String name = scanner.next();
+                            String name = scanner.nextLine();
                             if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
                                 DatabaseManager.getInstance().sellComputerSystem(name);
                             } else {
