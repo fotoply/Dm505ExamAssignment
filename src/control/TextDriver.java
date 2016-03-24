@@ -1,8 +1,5 @@
 package control;
 
-import javafx.application.Application;
-
-import java.io.NotActiveException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -45,12 +42,30 @@ public class TextDriver {
 
                 case 5:
                     // TODO Sell component
-                    System.out.println("Please type the name of the component to sell: ");
-                    String name = scanner.next();
-                    if(DatabaseManager.getInstance().isInStock(name)) {
-
-                    } else {
-                        System.out.println("Unable to sell as none is in stock.");
+                    while(true) {
+                        System.out.println("Type 1 to sell a component, 2 to sell a complete system and 3 to abort:");
+                        choice = scanner.nextInt();
+                        if(choice == 1) {
+                            System.out.println("Please type the name of the component to sell: ");
+                            String name = scanner.next();
+                            if(DatabaseManager.getInstance().isInStock(name)) {
+                                DatabaseManager.getInstance().sellComponent(name);
+                            } else {
+                                System.out.println("Unable to sell as none is in stock.");
+                            }
+                            break;
+                        } else if(choice == 2) {
+                            System.out.println("Please type the name of the component to sell: ");
+                            String name = scanner.next();
+                            if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
+                                DatabaseManager.getInstance().sellComputerSystem(name);
+                            } else {
+                                System.out.println("Unable to sell as some components are not in stock");
+                            }
+                            break;
+                        } else if(choice == 3){
+                            break;
+                        }
                     }
                     break;
 

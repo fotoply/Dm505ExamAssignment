@@ -56,7 +56,7 @@ public class DatabaseManager {
      */
     public ResultSet getComponents(String kind) throws SQLException {
         Statement statement = query.createStatement();
-        return statement.executeQuery("SELECT * FROM components natural join " + kind + " WHERE kind=" + kind + ";");
+        return statement.executeQuery("SELECT * FROM components natural join " + kind + " WHERE kind=''" + kind + "';");
     }
 
     public ResultSet getAllComponentsOrdered() throws SQLException {
@@ -76,14 +76,14 @@ public class DatabaseManager {
 
     public int maxBuildable(String name) throws SQLException {
         Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT min(amount) FROM (SELECT amount FROM components c WHERE exists (SELECT ramid,caseid,mainboardid,graphicsid,cpuid FROM computersystems WHERE name=" + name + " AND (c.componentid=ramid OR c.componentid=caseid OR c.componentid=mainboardid OR c.componentid=graphicsid OR c.componentid=cpuid))) AS sub1;");
+        ResultSet rs = statement.executeQuery("SELECT min(amount) FROM (SELECT amount FROM components c WHERE exists (SELECT ramid,caseid,mainboardid,graphicsid,cpuid FROM computersystems WHERE name='" + name + "' AND (c.componentid=ramid OR c.componentid=caseid OR c.componentid=mainboardid OR c.componentid=graphicsid OR c.componentid=cpuid))) AS sub1;");
         rs.next();
         return rs.getInt(1);
     }
 
     public void sellComponent(String name) throws SQLException {
         Statement statement = query.createStatement();
-        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name="+name+")-1 WHERE name="+name+";");
+        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name='"+name+"')-1 WHERE name='"+name+"';");
     }
 
 
@@ -96,7 +96,7 @@ public class DatabaseManager {
     public void sellComputerSystem(String systemName) throws SQLException {
         // TODO
         Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name="+systemName+";");
+        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='"+systemName+"';");
         for (int i = 2; i < 7; i++) {
             if(rs.getObject(i) != null) {
                 sellComponent(rs.getInt(i));
