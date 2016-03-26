@@ -34,7 +34,7 @@ public class DatabaseManager {
      * Will return null if no component is found.
      *
      * @param componentId the ID of the component
-     * @return Returns either null if no component is found otherwise returns the component and any additional information about it
+     * @return Returns either an empty ResultSet if no component is found otherwise returns the component and any additional information about it
      * @throws SQLException
      */
     public ResultSet getComponent(int componentId) throws SQLException {
@@ -43,7 +43,7 @@ public class DatabaseManager {
             String otherTable = component.getString("kind");
             return connectionDriver.executeQuery("SELECT * FROM components natural join %s WHERE componentid=%d;", otherTable, componentId);
         }
-        return null;
+        return component;
     }
 
     /**
