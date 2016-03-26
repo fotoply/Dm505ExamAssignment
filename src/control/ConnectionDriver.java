@@ -1,7 +1,6 @@
 package control;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.sql.*;
 
 /**
  * Created 3/4/16
@@ -35,6 +34,21 @@ public class ConnectionDriver {
             System.exit(0);
         }
         System.out.println("Opened database successfully");
+    }
+
+    public void executeUpdate(String sql, Object... args) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(String.format(sql, args));
+    }
+
+    public boolean execute(String sql, Object... args) throws SQLException {
+        Statement statement = connection.createStatement();
+        return statement.execute(String.format(sql,args));
+    }
+
+    public ResultSet executeQuery(String sql, Object... args) throws SQLException {
+        Statement statement = connection.createStatement();
+        return statement.executeQuery(String.format(sql,args));
     }
 
     public Connection getConnection() {
