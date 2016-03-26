@@ -10,9 +10,15 @@ import java.sql.Statement;
  *
  * @author Niels Norberg
  */
+@SuppressWarnings("SqlResolve")
 public class DatabaseManager {
     private static DatabaseManager instance;
     private Connection query;
+
+    private DatabaseManager() {
+        ConnectionDriver.getInstance().connect();
+        query = ConnectionDriver.getInstance().getConnection();
+    }
 
     public static DatabaseManager getInstance() {
         if (instance == null) {
@@ -21,19 +27,15 @@ public class DatabaseManager {
         return instance;
     }
 
-    private DatabaseManager() {
-            ConnectionDriver.getInstance().connect();
-            query = ConnectionDriver.getInstance().getConnection();
-    }
-
     public ResultSet fetchAllFromTable(String tableName) throws SQLException {
         Statement statement = query.createStatement();
-        return statement.executeQuery("SELECT * from " + tableName +";");
+        return statement.executeQuery("SELECT * from " + tableName + ";");
     }
 
     /**
      * Returns a component based on the given componentId. Automatically infers the table from which to get the extra information for the component.
      * Will return null if no component is found.
+     *
      * @param componentId
      * @return
      * @throws SQLException
@@ -50,6 +52,7 @@ public class DatabaseManager {
 
     /**
      * Returns all components of the given kind, plus extended data for these.
+     *
      * @param kind
      * @return
      * @throws SQLException
@@ -67,11 +70,7 @@ public class DatabaseManager {
     public boolean isInStock(String name) throws SQLException {
         Statement statement = query.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM components WHERE name='" + name + "' AND amount > 0");
-        if(rs.next()) {
-            return true;
-        } else {
-            return false;
-        }
+        return rs.next();
     }
 
     public int maxBuildable(String name) throws SQLException {
@@ -83,22 +82,22 @@ public class DatabaseManager {
 
     public void sellComponent(String name) throws SQLException {
         Statement statement = query.createStatement();
-        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name='"+name+"')-1 WHERE name='"+name+"';");
+        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name='" + name + "')-1 WHERE name='" + name + "';");
     }
 
 
     public void sellComponent(int componentId) throws SQLException {
         Statement statement = query.createStatement();
-        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where componentid="+componentId+")-1 WHERE componentid="+componentId+";");
+        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where componentid=" + componentId + ")-1 WHERE componentid=" + componentId + ";");
     }
 
 
     public void sellComputerSystem(String systemName) throws SQLException {
         Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='"+systemName+"';");
+        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='" + systemName + "';");
         rs.next();
         for (int i = 2; i < 7; i++) {
-            if(rs.getObject(i) != null) {
+            if (rs.getObject(i) != null) {
                 sellComponent(rs.getInt(i));
             }
         }
@@ -107,16 +106,16 @@ public class DatabaseManager {
     public int getPriceForSystem(String systemName) throws SQLException {
         int price = 0;
         Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='"+systemName+"';");
+        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='" + systemName + "';");
         rs.next();
         for (int i = 2; i < 7; i++) {
-            if(rs.getObject(i) != null) {
-                ResultSet rs2 = statement.executeQuery("SELECT price FROM components WHERE componentid=" + rs.getInt(i) +";");
+            if (rs.getObject(i) != null) {
+                ResultSet rs2 = statement.executeQuery("SELECT price FROM components WHERE componentid=" + rs.getInt(i) + ";");
                 rs2.next();
-                price += rs2.getInt("price")*TextDriver.PRICEMULTIPLIER;
+                price += rs2.getInt("price") * TextDriver.PRICEMULTIPLIER;
             }
         }
-        price = (int)(Math.ceil(price/100)*100)-1;
+        price = (int) (Math.ceil(price / 100) * 100) - 1;
         return price;
     }
 

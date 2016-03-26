@@ -12,6 +12,7 @@ import java.util.Scanner;
 public class TextDriver {
     public static final double PRICEMULTIPLIER = 1.3;
     private boolean running = true;
+
     public static void main(String[] args) throws SQLException {
         TextDriver driver = new TextDriver();
         driver.run();
@@ -40,47 +41,47 @@ public class TextDriver {
                     System.out.println("What is the name of the system you wish to sell?");
                     scanner.nextLine();
                     String name = scanner.nextLine();
-                    if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
+                    if (DatabaseManager.getInstance().maxBuildable(name) > 0) {
                         System.out.println("How many of this do you wish to sell?");
                         choice = scanner.nextInt();
-                        if(choice < 1) {
+                        if (choice < 1) {
                             System.out.println("Invalid amount.");
                             break;
                         }
-                        double reduction = Math.max(1-(choice-1)*0.02,0.8);
+                        double reduction = Math.max(1 - (choice - 1) * 0.02, 0.8);
                         int price = DatabaseManager.getInstance().getPriceForSystem(name);
-                        System.out.println("Final price for " + choice + " of " + name + " is " + price*reduction);
+                        System.out.println("Final price for " + choice + " of " + name + " is " + price * reduction);
                     } else {
                         System.out.println("This system does not exist or is not in stock.");
                     }
                     break;
 
                 case 5:
-                    while(true) {
+                    while (true) {
                         System.out.println("Type 1 to sell a component, 2 to sell a complete system and 3 to abort:");
                         choice = scanner.nextInt();
                         scanner.nextLine();
-                        if(choice == 1) {
+                        if (choice == 1) {
                             System.out.println("Please type the name of the component to sell: ");
                             name = scanner.nextLine();
-                            if(DatabaseManager.getInstance().isInStock(name)) {
+                            if (DatabaseManager.getInstance().isInStock(name)) {
                                 DatabaseManager.getInstance().sellComponent(name);
                                 System.out.println("One " + name + " was sold.");
                             } else {
                                 System.out.println("Unable to sell as none is in stock.");
                             }
                             break;
-                        } else if(choice == 2) {
+                        } else if (choice == 2) {
                             System.out.println("Please type the name of the component to sell: ");
                             name = scanner.nextLine();
-                            if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
+                            if (DatabaseManager.getInstance().maxBuildable(name) > 0) {
                                 DatabaseManager.getInstance().sellComputerSystem(name);
                                 System.out.println("One " + name + " was sold.");
                             } else {
                                 System.out.println("Unable to sell as some components are not in stock");
                             }
                             break;
-                        } else if(choice == 3){
+                        } else if (choice == 3) {
                             break;
                         }
                     }
@@ -91,7 +92,7 @@ public class TextDriver {
                     break;
 
                 case 7:
-                    if(ConnectionDriver.getInstance().getConnection() != null) {
+                    if (ConnectionDriver.getInstance().getConnection() != null) {
                         ConnectionDriver.getInstance().getConnection().close();
                     }
                     System.exit(0);
@@ -118,10 +119,10 @@ public class TextDriver {
     private void printAllComponents() throws SQLException {
         ResultSet rs;
         rs = DatabaseManager.getInstance().fetchAllFromTable("components");
-        System.out.format("%40s%10s%14s","Name","Amount","Type");
+        System.out.format("%40s%10s%14s", "Name", "Amount", "Type");
         System.out.println();
         while (rs.next()) {
-            System.out.format("%40s%10d%14s", rs.getString("name"),rs.getInt("amount"),rs.getString("kind"));
+            System.out.format("%40s%10d%14s", rs.getString("name"), rs.getInt("amount"), rs.getString("kind"));
             System.out.println();
         }
     }
@@ -133,10 +134,10 @@ public class TextDriver {
     private void printPrices() throws SQLException {
         ResultSet allItems = DatabaseManager.getInstance().getAllComponentsOrdered();
         System.out.println("Components: \n");
-        System.out.format("%40s%10s%14s","Name","Price","Type");
+        System.out.format("%40s%10s%14s", "Name", "Price", "Type");
         System.out.println();
         while (allItems.next()) {
-            System.out.format("%40s%10.1f%14s", allItems.getString("name"),allItems.getInt("price")*PRICEMULTIPLIER,allItems.getString("kind"));
+            System.out.format("%40s%10.1f%14s", allItems.getString("name"), allItems.getInt("price") * PRICEMULTIPLIER, allItems.getString("kind"));
             System.out.println();
         }
     }

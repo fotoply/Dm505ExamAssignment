@@ -1,6 +1,5 @@
 package control;
 
-import java.io.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 
@@ -10,12 +9,14 @@ import java.sql.DriverManager;
  * @author Niels Norberg
  */
 public class ConnectionDriver {
+    private static ConnectionDriver instance;
     private String username = "postgres";
     private String password = "123";
     private String url = "jdbc:postgresql://localhost:5432/testdb";
-
-    private static ConnectionDriver instance;
     private Connection connection = null;
+
+    private ConnectionDriver() {
+    }
 
     public static ConnectionDriver getInstance() {
         if (instance == null) {
@@ -24,16 +25,13 @@ public class ConnectionDriver {
         return instance;
     }
 
-    private ConnectionDriver() {
-    }
-
     public void connect() {
         try {
             Class.forName("org.postgresql.Driver");
             connection = DriverManager.getConnection(url, username, password);
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println(e.getClass().getName()+": "+e.getMessage());
+            System.err.println(e.getClass().getName() + ": " + e.getMessage());
             System.exit(0);
         }
         System.out.println("Opened database successfully");
