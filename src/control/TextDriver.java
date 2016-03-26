@@ -1,5 +1,7 @@
 package control;
 
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -103,6 +105,7 @@ public class TextDriver {
 
     private void printRestockingList() {
         // TODO
+        throw new NotImplementedException();
     }
 
     private void printOptions() {
