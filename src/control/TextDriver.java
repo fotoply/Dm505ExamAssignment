@@ -41,53 +41,11 @@ public class TextDriver {
                     break;
 
                 case 4:
-                    System.out.println("What is the name of the system you wish to sell?");
-                    scanner.nextLine();
-                    String name = scanner.nextLine();
-                    if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
-                        System.out.println("How many of this do you wish to sell?");
-                        choice = scanner.nextInt();
-                        if (choice < 1) {
-                            System.out.println("Invalid amount.");
-                            break;
-                        }
-                        double reduction = Math.max(1 - (choice - 1) * 0.02, 0.8);
-                        int price = (int) (DatabaseManager.getInstance().getPriceForSystem(name) * choice * reduction);
-                        System.out.println("Final price for " + choice + " of " + name + " is " + price);
-                    } else {
-                        System.out.println("This system does not exist or is not in stock.");
-                    }
+                    handlePriceOffer(scanner);
                     break;
 
                 case 5:
-                    while (true) {
-                        System.out.println("Type 1 to sell a component, 2 to sell a complete system and 3 to abort:");
-                        choice = scanner.nextInt();
-                        scanner.nextLine();
-                        if (choice == 1) {
-                            System.out.println("Please type the name of the component to sell: ");
-                            name = scanner.nextLine();
-                            if (DatabaseManager.getInstance().isInStock(name)) {
-                                DatabaseManager.getInstance().sellComponent(name);
-                                System.out.println("One " + name + " was sold.");
-                            } else {
-                                System.out.println("Unable to sell as none is in stock.");
-                            }
-                            break;
-                        } else if (choice == 2) {
-                            System.out.println("Please type the name of the component to sell: ");
-                            name = scanner.nextLine();
-                            if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
-                                DatabaseManager.getInstance().sellComputerSystem(name);
-                                System.out.println("One " + name + " was sold.");
-                            } else {
-                                System.out.println("Unable to sell as some components are not in stock");
-                            }
-                            break;
-                        } else if (choice == 3) {
-                            break;
-                        }
-                    }
+                    handleSellComponentOrSystem(scanner);
                     break;
 
                 case 6:
@@ -95,14 +53,71 @@ public class TextDriver {
                     break;
 
                 case 7:
-                    if (ConnectionDriver.getInstance().getConnection() != null) {
-                        ConnectionDriver.getInstance().getConnection().close();
-                    }
-                    running = false;
-                    //System.exit(0);
+                    exitProgram();
                     break;
             }
         }
+    }
+
+    private void handlePriceOffer(Scanner scanner) throws SQLException {
+        int choice;
+        System.out.println("What is the name of the system you wish to sell?");
+        scanner.nextLine();
+        String name = scanner.nextLine();
+        if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
+            System.out.println("How many of this do you wish to sell?");
+            choice = scanner.nextInt();
+            if (choice < 1) {
+                System.out.println("Invalid amount.");
+                return;
+            }
+            double reduction = Math.max(1 - (choice - 1) * 0.02, 0.8);
+            int price = (int) (DatabaseManager.getInstance().getPriceForSystem(name) * choice * reduction);
+            System.out.println("Final price for " + choice + " of " + name + " is " + price);
+        } else {
+            System.out.println("This system does not exist or is not in stock.");
+        }
+    }
+
+    private void handleSellComponentOrSystem(Scanner scanner) throws SQLException {
+        int choice;
+        String name;
+        while (true) {
+            System.out.println("Type 1 to sell a component, 2 to sell a complete system and 3 to abort:");
+            choice = scanner.nextInt();
+            scanner.nextLine();
+            if (choice == 1) {
+                System.out.println("Please type the name of the component to sell: ");
+                name = scanner.nextLine();
+                if (DatabaseManager.getInstance().isInStock(name)) {
+                    DatabaseManager.getInstance().sellComponent(name);
+                    System.out.println("One " + name + " was sold.");
+                } else {
+                    System.out.println("Unable to sell as none is in stock.");
+                }
+                break;
+            } else if (choice == 2) {
+                System.out.println("Please type the name of the component to sell: ");
+                name = scanner.nextLine();
+                if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
+                    DatabaseManager.getInstance().sellComputerSystem(name);
+                    System.out.println("One " + name + " was sold.");
+                } else {
+                    System.out.println("Unable to sell as some components are not in stock");
+                }
+                break;
+            } else if (choice == 3) {
+                break;
+            }
+        }
+    }
+
+    private void exitProgram() throws SQLException {
+        if (ConnectionDriver.getInstance().getConnection() != null) {
+            ConnectionDriver.getInstance().getConnection().close();
+        }
+        running = false;
+        //System.exit(0);
     }
 
     private void printRestockingList() {
@@ -150,6 +165,6 @@ public class TextDriver {
             System.out.format("%40s%10.1f%14s", allItems.getString("name"), allItems.getInt("price") * PRICEMULTIPLIER, allItems.getString("kind"));
             System.out.println();
         }
-        // TODO "as all computers systems that could be build from the current stock including their components and selling price."
+        // TODO "as all computers systems that could be build from the current stock including their components and selling price.""
     }
 }
