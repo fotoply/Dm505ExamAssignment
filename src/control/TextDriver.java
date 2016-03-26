@@ -41,7 +41,7 @@ public class TextDriver {
                     System.out.println("What is the name of the system you wish to sell?");
                     scanner.nextLine();
                     String name = scanner.nextLine();
-                    if (DatabaseManager.getInstance().maxBuildable(name) > 0) {
+                    if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
                         System.out.println("How many of this do you wish to sell?");
                         choice = scanner.nextInt();
                         if (choice < 1) {
@@ -74,7 +74,7 @@ public class TextDriver {
                         } else if (choice == 2) {
                             System.out.println("Please type the name of the component to sell: ");
                             name = scanner.nextLine();
-                            if (DatabaseManager.getInstance().maxBuildable(name) > 0) {
+                            if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
                                 DatabaseManager.getInstance().sellComputerSystem(name);
                                 System.out.println("One " + name + " was sold.");
                             } else {
@@ -117,8 +117,7 @@ public class TextDriver {
     }
 
     private void printAllComponents() throws SQLException {
-        ResultSet rs;
-        rs = DatabaseManager.getInstance().fetchAllFromTable("components");
+        ResultSet rs = DatabaseManager.getInstance().getAllFromTable("components");
         System.out.format("%40s%10s%14s", "Name", "Amount", "Type");
         System.out.println();
         while (rs.next()) {
@@ -127,8 +126,14 @@ public class TextDriver {
         }
     }
 
-    private void printAllSystems() {
-        // TODO
+    private void printAllSystems() throws SQLException {
+        ResultSet rs = DatabaseManager.getInstance().getAllFromTable("computersystems");
+        System.out.format("%40s%10s", "Name", "Buildable");
+        System.out.println();
+        while (rs.next()) {
+            System.out.format("%40s%10d",rs.getString("name"),DatabaseManager.getInstance().getMaxSystemsBuildable(rs.getString("name")));
+            System.out.println();
+        }
     }
 
     private void printPrices() throws SQLException {

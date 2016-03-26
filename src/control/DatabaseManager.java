@@ -27,7 +27,7 @@ public class DatabaseManager {
         return instance;
     }
 
-    public ResultSet fetchAllFromTable(String tableName) throws SQLException {
+    public ResultSet getAllFromTable(String tableName) throws SQLException {
         Statement statement = query.createStatement();
         return statement.executeQuery("SELECT * from " + tableName + ";");
     }
@@ -36,8 +36,8 @@ public class DatabaseManager {
      * Returns a component based on the given componentId. Automatically infers the table from which to get the extra information for the component.
      * Will return null if no component is found.
      *
-     * @param componentId
-     * @return
+     * @param componentId the ID of the component
+     * @return Returns either null if no component is found otherwise returns the component and any additional information about it
      * @throws SQLException
      */
     public ResultSet getComponent(int componentId) throws SQLException {
@@ -53,13 +53,13 @@ public class DatabaseManager {
     /**
      * Returns all components of the given kind, plus extended data for these.
      *
-     * @param kind
-     * @return
+     * @param type The type of component
+     * @return All components found or an empty ResultSet
      * @throws SQLException
      */
-    public ResultSet getComponents(String kind) throws SQLException {
+    public ResultSet getComponents(String type) throws SQLException {
         Statement statement = query.createStatement();
-        return statement.executeQuery("SELECT * FROM components natural join " + kind + " WHERE kind=''" + kind + "';");
+        return statement.executeQuery("SELECT * FROM components natural join " + type + " WHERE kind=''" + type + "';");
     }
 
     public ResultSet getAllComponentsOrdered() throws SQLException {
@@ -73,7 +73,7 @@ public class DatabaseManager {
         return rs.next();
     }
 
-    public int maxBuildable(String name) throws SQLException {
+    public int getMaxSystemsBuildable(String name) throws SQLException {
         Statement statement = query.createStatement();
         ResultSet rs = statement.executeQuery("SELECT min(amount) FROM (SELECT amount FROM components c WHERE exists (SELECT ramid,caseid,mainboardid,graphicsid,cpuid FROM computersystems WHERE name='" + name + "' AND (c.componentid=ramid OR c.componentid=caseid OR c.componentid=mainboardid OR c.componentid=graphicsid OR c.componentid=cpuid))) AS sub1;");
         rs.next();
