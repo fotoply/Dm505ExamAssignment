@@ -112,6 +112,7 @@ public class DatabaseManager {
         for (int i = 2; i < 7; i++) {
             if(rs.getObject(i) != null) {
                 ResultSet rs2 = statement.executeQuery("SELECT price FROM components WHERE componentid=" + rs.getInt(i) +";");
+                rs2.next();
                 price += rs2.getInt("price")*TextDriver.PRICEMULTIPLIER;
             }
         }

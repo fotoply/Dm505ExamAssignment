@@ -43,7 +43,11 @@ public class TextDriver {
                     if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
                         System.out.println("How many of this do you wish to sell?");
                         choice = scanner.nextInt();
-                        double reduction = Math.max(1-choice*0.02,0.8);
+                        if(choice < 1) {
+                            System.out.println("Invalid amount.");
+                            break;
+                        }
+                        double reduction = Math.max(1-(choice-1)*0.02,0.8);
                         int price = DatabaseManager.getInstance().getPriceForSystem(name);
                         System.out.println("Final price for " + choice + " of " + name + " is " + price*reduction);
                     } else {
