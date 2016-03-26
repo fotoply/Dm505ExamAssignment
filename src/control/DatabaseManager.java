@@ -26,7 +26,7 @@ public class DatabaseManager {
     }
 
     public ResultSet getAllFromTable(String tableName) throws SQLException {
-        return connectionDriver.executeQuery("SELECT * from %s;", tableName);
+        return connectionDriver.executeQuery("SELECT * FROM %s;", tableName);
     }
 
     /**
@@ -41,7 +41,7 @@ public class DatabaseManager {
         ResultSet component = connectionDriver.executeQuery("SELECT * FROM components WHERE componentid=%d LIMIT 1;", componentId);
         if (component.next()) {
             String otherTable = component.getString("kind");
-            return connectionDriver.executeQuery("SELECT * FROM components natural join %s WHERE componentid=%d;", otherTable, componentId);
+            return connectionDriver.executeQuery("SELECT * FROM components NATURAL JOIN %s WHERE componentid=%d;", otherTable, componentId);
         }
         return component;
     }
@@ -54,11 +54,12 @@ public class DatabaseManager {
      * @throws SQLException
      */
     public ResultSet getComponents(String type) throws SQLException {
-        return connectionDriver.executeQuery("SELECT * FROM components natural join %s WHERE kind='%s';", type, type);
+        return connectionDriver.executeQuery("SELECT * FROM components NATURAL JOIN %s WHERE kind='%s';", type, type);
     }
 
     /**
      * Returns the price, name and type of all components in the components table. The result is ordered first by type then by price.
+     *
      * @return A ResultSet of components that is ordered
      * @throws SQLException
      */
@@ -68,6 +69,7 @@ public class DatabaseManager {
 
     /**
      * Returns whether a component is in stock
+     *
      * @param name the name of the component, case sensitive.
      * @return true if in stock otherwise false
      * @throws SQLException
@@ -79,6 +81,7 @@ public class DatabaseManager {
 
     /**
      * Returns the max amount the shop can build of a given system in their database
+     *
      * @param name the name of the system, case sensitive.
      * @return the amount of systems buildable.
      * @throws SQLException
@@ -91,26 +94,29 @@ public class DatabaseManager {
 
     /**
      * Creates a sale in the database by decrementing the amount of a given component which is in stock.
+     *
      * @param name the components name, case sensitive.
      * @throws SQLException
      */
     public void sellComponent(String name) throws SQLException {
-        if(isInStock(name)) {
+        if (isInStock(name)) {
             connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components WHERE name='%s')-1 WHERE name='%s';", name, name);
         }
     }
 
     /**
      * Creates a sale in the database by decrementing the amount of a given component.<br> <u>Does not verify that it is actually in stock.</u>
+     *
      * @param componentId the components id
      * @throws SQLException
      */
     public void sellComponent(int componentId) throws SQLException {
-        connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where componentid=%d)-1 WHERE componentid=%d;", componentId, componentId);
+        connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components WHERE componentid=%d)-1 WHERE componentid=%d;", componentId, componentId);
     }
 
     /**
      * Sells a computer system by decrementing all of components it contains by 1. <br> <u>Does not verify that it is actually in stock.</u>
+     *
      * @param systemName the name of the computer system, case sensitive.
      * @throws SQLException
      */
@@ -126,6 +132,7 @@ public class DatabaseManager {
 
     /**
      * Gets the price of a computer system from the database.
+     *
      * @param systemName the name of the computer system, case sensitive.
      * @return the maximum copies of the system that is buildable with current components.
      * @throws SQLException

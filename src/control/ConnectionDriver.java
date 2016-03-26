@@ -12,7 +12,7 @@ public class ConnectionDriver {
     private String username = "postgres";
     private String password = "123";
     private String url = "jdbc:postgresql://localhost:5432/testdb";
-    private Connection connection = null;
+    private Connection connection;
 
     private ConnectionDriver() {
     }
@@ -43,15 +43,18 @@ public class ConnectionDriver {
 
     public boolean execute(String sql, Object... args) throws SQLException {
         Statement statement = connection.createStatement();
-        return statement.execute(String.format(sql,args));
+        return statement.execute(String.format(sql, args));
     }
 
     public ResultSet executeQuery(String sql, Object... args) throws SQLException {
         Statement statement = connection.createStatement();
-        return statement.executeQuery(String.format(sql,args));
+        return statement.executeQuery(String.format(sql, args));
     }
 
     public Connection getConnection() {
+        if(connection == null) {
+            connect();
+        }
         return connection;
     }
 

@@ -13,6 +13,7 @@ import java.util.Scanner;
  */
 public class TextDriver {
     public static final double PRICEMULTIPLIER = 1.3;
+    @SuppressWarnings("FieldCanBeLocal")
     private boolean running = true;
 
     public static void main(String[] args) throws SQLException {
@@ -51,7 +52,7 @@ public class TextDriver {
                             break;
                         }
                         double reduction = Math.max(1 - (choice - 1) * 0.02, 0.8);
-                        int price = (int)(DatabaseManager.getInstance().getPriceForSystem(name)*choice*reduction);
+                        int price = (int) (DatabaseManager.getInstance().getPriceForSystem(name) * choice * reduction);
                         System.out.println("Final price for " + choice + " of " + name + " is " + price);
                     } else {
                         System.out.println("This system does not exist or is not in stock.");
@@ -97,7 +98,8 @@ public class TextDriver {
                     if (ConnectionDriver.getInstance().getConnection() != null) {
                         ConnectionDriver.getInstance().getConnection().close();
                     }
-                    System.exit(0);
+                    running = false;
+                    //System.exit(0);
                     break;
             }
         }
@@ -134,7 +136,7 @@ public class TextDriver {
         System.out.format("%40s%10s", "Name", "Buildable");
         System.out.println();
         while (rs.next()) {
-            System.out.format("%40s%10d",rs.getString("name"),DatabaseManager.getInstance().getMaxSystemsBuildable(rs.getString("name")));
+            System.out.format("%40s%10d", rs.getString("name"), DatabaseManager.getInstance().getMaxSystemsBuildable(rs.getString("name")));
             System.out.println();
         }
     }
