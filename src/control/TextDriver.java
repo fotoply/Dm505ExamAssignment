@@ -41,7 +41,6 @@ public class TextDriver {
                     break;
 
                 case 5:
-                    // TODO Sell component
                     while(true) {
                         System.out.println("Type 1 to sell a component, 2 to sell a complete system and 3 to abort:");
                         choice = scanner.nextInt();

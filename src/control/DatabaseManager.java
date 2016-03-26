@@ -94,7 +94,6 @@ public class DatabaseManager {
 
 
     public void sellComputerSystem(String systemName) throws SQLException {
-        // TODO
         Statement statement = query.createStatement();
         ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='"+systemName+"';");
         rs.next();
@@ -103,6 +102,20 @@ public class DatabaseManager {
                 sellComponent(rs.getInt(i));
             }
         }
+    }
+
+    public int getPriceForSystem(String systemName) throws SQLException {
+        int price = 0;
+        Statement statement = query.createStatement();
+        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='"+systemName+"';");
+        rs.next();
+        for (int i = 2; i < 7; i++) {
+            if(rs.getObject(i) != null) {
+                ResultSet rs2 = statement.executeQuery("SELECT price FROM components WHERE componentid=" + rs.getInt(i));
+                price += rs2.getInt("price")*TextDriver.PRICEMULTIPLIER;
+            }
+        }
+        return price;
     }
 
 }
