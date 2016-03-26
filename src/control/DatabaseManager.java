@@ -1,9 +1,7 @@
 package control;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 /**
  * Created 3/22/16
@@ -13,11 +11,11 @@ import java.sql.Statement;
 @SuppressWarnings("SqlResolve")
 public class DatabaseManager {
     private static DatabaseManager instance;
-    private Connection query;
+    private ConnectionDriver connectionDriver;
 
     private DatabaseManager() {
         ConnectionDriver.getInstance().connect();
-        query = ConnectionDriver.getInstance().getConnection();
+        connectionDriver = ConnectionDriver.getInstance();
     }
 
     public static DatabaseManager getInstance() {
@@ -28,8 +26,7 @@ public class DatabaseManager {
     }
 
     public ResultSet getAllFromTable(String tableName) throws SQLException {
-        Statement statement = query.createStatement();
-        return statement.executeQuery("SELECT * from " + tableName + ";");
+        return connectionDriver.executeQuery("SELECT * from %s;", tableName);
     }
 
     /**
@@ -41,11 +38,10 @@ public class DatabaseManager {
      * @throws SQLException
      */
     public ResultSet getComponent(int componentId) throws SQLException {
-        Statement statement = query.createStatement();
-        ResultSet component = statement.executeQuery("SELECT * FROM components WHERE componentid=" + componentId + " LIMIT 1;");
+        ResultSet component = connectionDriver.executeQuery("SELECT * FROM components WHERE componentid=%d LIMIT 1;", componentId);
         if (component.next()) {
             String otherTable = component.getString("kind");
-            return statement.executeQuery("SELECT * FROM components natural join " + otherTable + " WHERE componentid=" + componentId + ";");
+            return connectionDriver.executeQuery("SELECT * FROM components natural join %s WHERE componentid=%d;", otherTable, componentId);
         }
         return null;
     }
@@ -58,43 +54,36 @@ public class DatabaseManager {
      * @throws SQLException
      */
     public ResultSet getComponents(String type) throws SQLException {
-        Statement statement = query.createStatement();
-        return statement.executeQuery("SELECT * FROM components natural join " + type + " WHERE kind=''" + type + "';");
+        return connectionDriver.executeQuery("SELECT * FROM components natural join %s WHERE kind=''%s';", type, type);
     }
 
     public ResultSet getAllComponentsOrdered() throws SQLException {
-        Statement statement = query.createStatement();
-        return statement.executeQuery("SELECT name, kind, price FROM components ORDER BY kind, price");
+        return connectionDriver.executeQuery("SELECT name, kind, price FROM components ORDER BY kind, price");
     }
 
     public boolean isInStock(String name) throws SQLException {
-        Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM components WHERE name='" + name + "' AND amount > 0");
+        ResultSet rs = connectionDriver.executeQuery("SELECT * FROM components WHERE name='%s' AND amount > 0", name);
         return rs.next();
     }
 
     public int getMaxSystemsBuildable(String name) throws SQLException {
-        Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT min(amount) FROM (SELECT amount FROM components c WHERE exists (SELECT ramid,caseid,mainboardid,graphicsid,cpuid FROM computersystems WHERE name='" + name + "' AND (c.componentid=ramid OR c.componentid=caseid OR c.componentid=mainboardid OR c.componentid=graphicsid OR c.componentid=cpuid))) AS sub1;");
+        ResultSet rs = connectionDriver.executeQuery("SELECT min(amount) FROM (SELECT amount FROM components c WHERE exists (SELECT ramid,caseid,mainboardid,graphicsid,cpuid FROM computersystems WHERE name='%s' AND (c.componentid=ramid OR c.componentid=caseid OR c.componentid=mainboardid OR c.componentid=graphicsid OR c.componentid=cpuid))) AS sub1;", name);
         rs.next();
         return rs.getInt(1);
     }
 
     public void sellComponent(String name) throws SQLException {
-        Statement statement = query.createStatement();
-        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name='" + name + "')-1 WHERE name='" + name + "';");
+        connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name='%s')-1 WHERE name='%s';", name, name);
     }
 
 
     public void sellComponent(int componentId) throws SQLException {
-        Statement statement = query.createStatement();
-        statement.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where componentid=" + componentId + ")-1 WHERE componentid=" + componentId + ";");
+        connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where componentid=%d)-1 WHERE componentid=%d;", componentId, componentId);
     }
 
 
     public void sellComputerSystem(String systemName) throws SQLException {
-        Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='" + systemName + "';");
+        ResultSet rs = connectionDriver.executeQuery("SELECT * FROM computersystems WHERE name='%s';", systemName);
         rs.next();
         for (int i = 2; i < 7; i++) {
             if (rs.getObject(i) != null) {
@@ -105,13 +94,11 @@ public class DatabaseManager {
 
     public int getPriceForSystem(String systemName) throws SQLException {
         int price = 0;
-        Statement statement = query.createStatement();
-        ResultSet rs = statement.executeQuery("SELECT * FROM computersystems WHERE name='" + systemName + "';");
+        ResultSet rs = connectionDriver.executeQuery("SELECT * FROM computersystems WHERE name='%s';", systemName);
         rs.next();
         for (int i = 2; i < 7; i++) {
             if (rs.getObject(i) != null) {
-                Statement statement2 = query.createStatement();
-                ResultSet rs2 = statement2.executeQuery("SELECT price FROM components WHERE componentid=" + rs.getInt(i) + ";");
+                ResultSet rs2 = connectionDriver.executeQuery("SELECT price FROM components WHERE componentid=%d;", rs.getInt(i));
                 rs2.next();
                 price += rs2.getInt("price") * TextDriver.PRICEMULTIPLIER;
             }
