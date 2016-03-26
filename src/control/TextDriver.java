@@ -106,7 +106,7 @@ public class TextDriver {
     }
 
     private void printRestockingList() {
-        // TODO
+        // TODO implement the restocking list so that it follows the conditions: "including names and amounts of all components needed for restocking to the preferred level."
         throw new NotImplementedException();
     }
 
@@ -150,6 +150,6 @@ public class TextDriver {
             System.out.format("%40s%10.1f%14s", allItems.getString("name"), allItems.getInt("price") * PRICEMULTIPLIER, allItems.getString("kind"));
             System.out.println();
         }
-        // TODO add functionality for systems
+        // TODO "as all computers systems that could be build from the current stock including their components and selling price."
     }
 }
