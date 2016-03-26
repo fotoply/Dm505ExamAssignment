@@ -49,8 +49,8 @@ public class TextDriver {
                             break;
                         }
                         double reduction = Math.max(1 - (choice - 1) * 0.02, 0.8);
-                        int price = DatabaseManager.getInstance().getPriceForSystem(name)*choice;
-                        System.out.println("Final price for " + choice + " of " + name + " is " + price * reduction);
+                        int price = (int)(DatabaseManager.getInstance().getPriceForSystem(name)*choice*reduction);
+                        System.out.println("Final price for " + choice + " of " + name + " is " + price);
                     } else {
                         System.out.println("This system does not exist or is not in stock.");
                     }
@@ -140,5 +140,6 @@ public class TextDriver {
             System.out.format("%40s%10.1f%14s", allItems.getString("name"), allItems.getInt("price") * PRICEMULTIPLIER, allItems.getString("kind"));
             System.out.println();
         }
+        // TODO add functionality for systems
     }
 }
