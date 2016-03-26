@@ -54,34 +54,66 @@ public class DatabaseManager {
      * @throws SQLException
      */
     public ResultSet getComponents(String type) throws SQLException {
-        return connectionDriver.executeQuery("SELECT * FROM components natural join %s WHERE kind=''%s';", type, type);
+        return connectionDriver.executeQuery("SELECT * FROM components natural join %s WHERE kind='%s';", type, type);
     }
 
+    /**
+     * Returns the price, name and type of all components in the components table. The result is ordered first by type then by price.
+     * @return A ResultSet of components that is ordered
+     * @throws SQLException
+     */
     public ResultSet getAllComponentsOrdered() throws SQLException {
         return connectionDriver.executeQuery("SELECT name, kind, price FROM components ORDER BY kind, price");
     }
 
+    /**
+     * Returns whether a component is in stock
+     * @param name the name of the component, case sensitive.
+     * @return true if in stock otherwise false
+     * @throws SQLException
+     */
     public boolean isInStock(String name) throws SQLException {
         ResultSet rs = connectionDriver.executeQuery("SELECT * FROM components WHERE name='%s' AND amount > 0", name);
         return rs.next();
     }
 
+    /**
+     * Returns the max amount the shop can build of a given system in their database
+     * @param name the name of the system, case sensitive.
+     * @return the amount of systems buildable.
+     * @throws SQLException
+     */
     public int getMaxSystemsBuildable(String name) throws SQLException {
         ResultSet rs = connectionDriver.executeQuery("SELECT min(amount) FROM (SELECT amount FROM components c WHERE exists (SELECT ramid,caseid,mainboardid,graphicsid,cpuid FROM computersystems WHERE name='%s' AND (c.componentid=ramid OR c.componentid=caseid OR c.componentid=mainboardid OR c.componentid=graphicsid OR c.componentid=cpuid))) AS sub1;", name);
         rs.next();
         return rs.getInt(1);
     }
 
+    /**
+     * Creates a sale in the database by decrementing the amount of a given component which is in stock.
+     * @param name the components name, case sensitive.
+     * @throws SQLException
+     */
     public void sellComponent(String name) throws SQLException {
-        connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where name='%s')-1 WHERE name='%s';", name, name);
+        if(isInStock(name)) {
+            connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components WHERE name='%s')-1 WHERE name='%s';", name, name);
+        }
     }
 
-
+    /**
+     * Creates a sale in the database by decrementing the amount of a given component.<br> <u>Does not verify that it is actually in stock.</u>
+     * @param componentId the components id
+     * @throws SQLException
+     */
     public void sellComponent(int componentId) throws SQLException {
         connectionDriver.executeUpdate("UPDATE components SET amount=(SELECT amount FROM components where componentid=%d)-1 WHERE componentid=%d;", componentId, componentId);
     }
 
-
+    /**
+     * Sells a computer system by decrementing all of components it contains by 1. <br> <u>Does not verify that it is actually in stock.</u>
+     * @param systemName the name of the computer system, case sensitive.
+     * @throws SQLException
+     */
     public void sellComputerSystem(String systemName) throws SQLException {
         ResultSet rs = connectionDriver.executeQuery("SELECT * FROM computersystems WHERE name='%s';", systemName);
         rs.next();
@@ -92,6 +124,12 @@ public class DatabaseManager {
         }
     }
 
+    /**
+     * Gets the price of a computer system from the database.
+     * @param systemName the name of the computer system, case sensitive.
+     * @return the maximum copies of the system that is buildable with current components.
+     * @throws SQLException
+     */
     public int getPriceForSystem(String systemName) throws SQLException {
         int price = 0;
         ResultSet rs = connectionDriver.executeQuery("SELECT * FROM computersystems WHERE name='%s';", systemName);
