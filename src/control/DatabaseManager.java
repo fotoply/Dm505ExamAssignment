@@ -115,6 +115,7 @@ public class DatabaseManager {
                 price += rs2.getInt("price")*TextDriver.PRICEMULTIPLIER;
             }
         }
+        price = (int)(Math.ceil(price/100)*100)-1;
         return price;
     }
 

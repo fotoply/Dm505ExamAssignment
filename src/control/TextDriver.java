@@ -37,7 +37,18 @@ public class TextDriver {
                     break;
 
                 case 4:
-                    // TODO Price offer
+                    System.out.println("What is the name of the system you wish to sell?");
+                    scanner.nextLine();
+                    String name = scanner.nextLine();
+                    if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
+                        System.out.println("How many of this do you wish to sell?");
+                        choice = scanner.nextInt();
+                        double reduction = Math.max(1-choice*0.02,0.8);
+                        int price = DatabaseManager.getInstance().getPriceForSystem(name);
+                        System.out.println("Final price for " + choice + " of " + name + " is " + price*reduction);
+                    } else {
+                        System.out.println("This system does not exist or is not in stock.");
+                    }
                     break;
 
                 case 5:
@@ -47,7 +58,7 @@ public class TextDriver {
                         scanner.nextLine();
                         if(choice == 1) {
                             System.out.println("Please type the name of the component to sell: ");
-                            String name = scanner.nextLine();
+                            name = scanner.nextLine();
                             if(DatabaseManager.getInstance().isInStock(name)) {
                                 DatabaseManager.getInstance().sellComponent(name);
                                 System.out.println("One " + name + " was sold.");
@@ -57,7 +68,7 @@ public class TextDriver {
                             break;
                         } else if(choice == 2) {
                             System.out.println("Please type the name of the component to sell: ");
-                            String name = scanner.nextLine();
+                            name = scanner.nextLine();
                             if(DatabaseManager.getInstance().maxBuildable(name) > 0) {
                                 DatabaseManager.getInstance().sellComputerSystem(name);
                                 System.out.println("One " + name + " was sold.");
