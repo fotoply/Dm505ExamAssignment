@@ -49,7 +49,7 @@ public class TextDriver {
                             break;
                         }
                         double reduction = Math.max(1 - (choice - 1) * 0.02, 0.8);
-                        int price = DatabaseManager.getInstance().getPriceForSystem(name);
+                        int price = DatabaseManager.getInstance().getPriceForSystem(name)*choice;
                         System.out.println("Final price for " + choice + " of " + name + " is " + price * reduction);
                     } else {
                         System.out.println("This system does not exist or is not in stock.");
