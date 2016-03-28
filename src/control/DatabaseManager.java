@@ -155,11 +155,15 @@ public class DatabaseManager {
     public int getAmountNeededForRestock(int componentId) throws SQLException {
         int needed = 0;
         ResultSet rs = connectionDriver.executeQuery("SELECT amount FROM (SELECT prefered FROM minimumstock WHERE componentid=%d - (SELECT amount FROM components WHERE componentid=%d));",componentId);
+        rs.next();
+        needed = rs.getInt(1);
         return (needed <= 0) ? 0 : needed;
     }
 
     public int getMaxComponentId() throws SQLException {
-        return connectionDriver.executeQuery("SELECT max(componentid) FROM components;").getInt(1);
+        ResultSet rs = connectionDriver.executeQuery("SELECT max(componentid) FROM components;");
+        rs.next();
+        return rs.getInt(1);
     }
 
 }

@@ -1,7 +1,5 @@
 package control;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -120,9 +118,14 @@ public class TextDriver {
         //System.exit(0);
     }
 
-    private void printRestockingList() {
+    private void printRestockingList() throws SQLException {
         // TODO implement the restocking list so that it follows the conditions: "including names and amounts of all components needed for restocking to the preferred level."
-        throw new NotImplementedException();
+        for (int i = 1; i < DatabaseManager.getInstance().getMaxComponentId()+1; i++) {
+            ResultSet component = DatabaseManager.getInstance().getComponent(i);
+            int needed = DatabaseManager.getInstance().getAmountNeededForRestock(i);
+            System.out.format("%40s%10s", "Name", "Needed");
+            System.out.printf("%40s%10f", component.getString("name"), needed);
+        }
     }
 
     private void printOptions() {
