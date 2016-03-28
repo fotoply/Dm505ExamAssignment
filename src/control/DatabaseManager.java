@@ -154,7 +154,7 @@ public class DatabaseManager {
 
     public int getAmountNeededForRestock(int componentId) throws SQLException {
         int needed;
-        ResultSet rs = connectionDriver.executeQuery("SELECT prefered FROM (SELECT prefered FROM minimumstock WHERE componentid=%d - (SELECT amount FROM components WHERE componentid=%d)) as foo;",componentId, componentId);
+        ResultSet rs = connectionDriver.executeQuery("SELECT sum(prefered-amount) FROM minimumstock,components WHERE minimumstock.componentid=%d AND components.componentid=%d;",componentId, componentId);
         if(rs.next()) {
             needed = rs.getInt(1);
             return (needed <= 0) ? 0 : needed;
