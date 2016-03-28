@@ -119,7 +119,6 @@ public class TextDriver {
     }
 
     private void printRestockingList() throws SQLException {
-        // TODO implement the restocking list so that it follows the conditions: "including names and amounts of all components needed for restocking to the preferred level."
         System.out.format("%40s%10s", "Name", "Needed");
         System.out.println();
         for (int i = 1; i < DatabaseManager.getInstance().getMaxComponentId()+1; i++) {
