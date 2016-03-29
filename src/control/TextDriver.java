@@ -87,28 +87,38 @@ public class TextDriver {
             choice = scanner.nextInt();
             scanner.nextLine();
             if (choice == 1) {
-                System.out.println("Please type the name of the component to sell: ");
-                name = scanner.nextLine();
-                if (database.isInStock(name)) {
-                    database.sellComponent(name);
-                    System.out.println("One " + name + " was sold.");
-                } else {
-                    System.out.println("Unable to sell as none is in stock.");
-                }
+                sellComponent(scanner);
                 break;
             } else if (choice == 2) {
-                System.out.println("Please type the name of the component to sell: ");
-                name = scanner.nextLine();
-                if (database.getMaxSystemsBuildable(name) > 0) {
-                    database.sellComputerSystem(name);
-                    System.out.println("One " + name + " was sold.");
-                } else {
-                    System.out.println("Unable to sell as some components are not in stock");
-                }
+                sellSystem(scanner);
                 break;
             } else if (choice == 3) {
                 break;
             }
+        }
+    }
+
+    private void sellSystem(Scanner scanner) throws SQLException {
+        String name;
+        System.out.println("Please type the name of the system to sell: ");
+        name = scanner.nextLine();
+        if (database.getMaxSystemsBuildable(name) > 0) {
+            database.sellComputerSystem(name);
+            System.out.println("One " + name + " was sold.");
+        } else {
+            System.out.println("Unable to sell as some components are not in stock");
+        }
+    }
+
+    private void sellComponent(Scanner scanner) throws SQLException {
+        String name;
+        System.out.println("Please type the name of the component to sell: ");
+        name = scanner.nextLine();
+        if (database.isInStock(name)) {
+            database.sellComponent(name);
+            System.out.println("One " + name + " was sold.");
+        } else {
+            System.out.println("Unable to sell as none is in stock.");
         }
     }
 
