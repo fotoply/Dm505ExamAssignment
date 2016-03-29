@@ -175,7 +175,22 @@ public class TextDriver {
     }
 
     private void printSystemPrices() throws SQLException {
-
-        // TODO "as all computers systems that could be build from the current stock including their components and selling price."
+        ResultSet allSystems = DatabaseManager.getInstance().getAllComputerSystems();
+        System.out.println("Systems: \n");
+        System.out.println();
+        while(allSystems.next()) {
+            if(DatabaseManager.getInstance().getMaxSystemsBuildable(allSystems.getString("name")) > 0) {
+                System.out.println(allSystems.getString("name"));
+                for (int i = 2; i < 7; i++) {
+                    if (allSystems.getObject(i) != null) {
+                        ResultSet rs = DatabaseManager.getInstance().getComponent(allSystems.getInt(i));
+                        rs.next();
+                        System.out.println(" -> " + rs.getString("name"));
+                    }
+                }
+                System.out.println("Total price: " + DatabaseManager.getInstance().getPriceForSystem(allSystems.getString("name")));
+                System.out.println();
+            }
+        }
     }
 }
