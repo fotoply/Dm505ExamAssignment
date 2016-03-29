@@ -200,6 +200,11 @@ public class DatabaseHelper {
         return rs.getInt(1);
     }
 
+    /**
+     * Get all computersystems in the database and all columns associated with them
+     * @return A ResultSet with all the data of the computersystems table
+     * @throws SQLException
+     */
     public ResultSet getAllComputerSystems() throws SQLException {
         return connectionDriver.executeQuery("SELECT * from computersystems;");
     }
