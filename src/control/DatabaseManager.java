@@ -179,4 +179,24 @@ public class DatabaseManager {
         return rs.getInt(1);
     }
 
+    /**
+     * Returns a computer system by id
+     * @param systemID the ID of the system
+     * @return
+     * @throws SQLException
+     */
+    public ResultSet getComputerSystem(int systemID) throws SQLException {
+        return connectionDriver.executeQuery("SELECT * FROM computersystems WHERE systemid='%d';", systemID);
+    }
+
+    /**
+     * Gets the max systemId in the system. There is no guarantee that all system below that number exists, but nothing exists above it.
+     * @return the max ID
+     * @throws SQLException
+     */
+    public int getMaxComputerSystemId() throws SQLException {
+        ResultSet rs = connectionDriver.executeQuery("SELECT max(systemid) FROM computersystems;");
+        rs.next();
+        return rs.getInt(1);
+    }
 }
