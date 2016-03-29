@@ -152,6 +152,12 @@ public class DatabaseManager {
         return price;
     }
 
+    /**
+     * Get the amount that needs to be bought to have filled up to prefered levels for a given component.
+     * @param componentId the ID of the component
+     * @return Returns the amount or 0 if there is equal to or more than the prefered level
+     * @throws SQLException
+     */
     public int getAmountNeededForRestock(int componentId) throws SQLException {
         int needed;
         ResultSet rs = connectionDriver.executeQuery("SELECT sum(prefered-amount) FROM minimumstock,components WHERE minimumstock.componentid=%d AND components.componentid=%d;",componentId, componentId);
@@ -162,6 +168,11 @@ public class DatabaseManager {
         return 0;
     }
 
+    /**
+     * Gets the max componentId in the system. There is no guarantee that all components below that number exists, but nothing exists above it.
+     * @return the max ID
+     * @throws SQLException
+     */
     public int getMaxComponentId() throws SQLException {
         ResultSet rs = connectionDriver.executeQuery("SELECT max(componentid) FROM components;");
         rs.next();
