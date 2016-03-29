@@ -35,7 +35,8 @@ public class TextDriver {
                     break;
 
                 case 3:
-                    printPrices();
+                    printComponentPrices();
+                    printSystemPrices();
                     break;
 
                 case 4:
@@ -162,7 +163,7 @@ public class TextDriver {
         }
     }
 
-    private void printPrices() throws SQLException {
+    private void printComponentPrices() throws SQLException {
         ResultSet allItems = DatabaseManager.getInstance().getAllComponentsOrdered();
         System.out.println("Components: \n");
         System.out.format("%40s%10s%14s", "Name", "Price", "Type");
@@ -171,6 +172,10 @@ public class TextDriver {
             System.out.format("%40s%10.1f%14s", allItems.getString("name"), allItems.getInt("price") * PRICEMULTIPLIER, allItems.getString("kind"));
             System.out.println();
         }
-        // TODO "as all computers systems that could be build from the current stock including their components and selling price.""
+    }
+
+    private void printSystemPrices() throws SQLException {
+
+        // TODO "as all computers systems that could be build from the current stock including their components and selling price."
     }
 }
