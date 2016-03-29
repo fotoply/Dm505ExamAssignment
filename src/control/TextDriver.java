@@ -11,6 +11,7 @@ import java.util.Scanner;
  */
 public class TextDriver {
     public static final double PRICEMULTIPLIER = 1.3;
+    public static final DatabaseHelper database = DatabaseHelper.getInstance();
     @SuppressWarnings("FieldCanBeLocal")
     private boolean running = true;
 
@@ -20,7 +21,7 @@ public class TextDriver {
     }
 
     public void run() throws SQLException {
-        DatabaseManager.getInstance();
+
         while (running) {
             printOptions();
             Scanner scanner = new Scanner(System.in);
@@ -63,7 +64,7 @@ public class TextDriver {
         System.out.println("What is the name of the system you wish to sell?");
         scanner.nextLine();
         String name = scanner.nextLine();
-        if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
+        if (database.getMaxSystemsBuildable(name) > 0) {
             System.out.println("How many of this do you wish to sell?");
             choice = scanner.nextInt();
             if (choice < 1) {
@@ -71,7 +72,7 @@ public class TextDriver {
                 return;
             }
             double reduction = Math.max(1 - (choice - 1) * 0.02, 0.8);
-            int price = (int) (DatabaseManager.getInstance().getPriceForSystem(name) * choice * reduction);
+            int price = (int) (database.getPriceForSystem(name) * choice * reduction);
             System.out.println("Final price for " + choice + " of " + name + " is " + price);
         } else {
             System.out.println("This system does not exist or is not in stock.");
@@ -88,8 +89,8 @@ public class TextDriver {
             if (choice == 1) {
                 System.out.println("Please type the name of the component to sell: ");
                 name = scanner.nextLine();
-                if (DatabaseManager.getInstance().isInStock(name)) {
-                    DatabaseManager.getInstance().sellComponent(name);
+                if (database.isInStock(name)) {
+                    database.sellComponent(name);
                     System.out.println("One " + name + " was sold.");
                 } else {
                     System.out.println("Unable to sell as none is in stock.");
@@ -98,8 +99,8 @@ public class TextDriver {
             } else if (choice == 2) {
                 System.out.println("Please type the name of the component to sell: ");
                 name = scanner.nextLine();
-                if (DatabaseManager.getInstance().getMaxSystemsBuildable(name) > 0) {
-                    DatabaseManager.getInstance().sellComputerSystem(name);
+                if (database.getMaxSystemsBuildable(name) > 0) {
+                    database.sellComputerSystem(name);
                     System.out.println("One " + name + " was sold.");
                 } else {
                     System.out.println("Unable to sell as some components are not in stock");
@@ -122,10 +123,10 @@ public class TextDriver {
     private void printRestockingList() throws SQLException {
         System.out.format("%40s%10s", "Name", "Needed");
         System.out.println();
-        for (int i = 1; i < DatabaseManager.getInstance().getMaxComponentId()+1; i++) {
-            ResultSet component = DatabaseManager.getInstance().getComponent(i);
+        for (int i = 1; i < database.getMaxComponentId()+1; i++) {
+            ResultSet component = database.getComponent(i);
             if(component.next()) {
-                int needed = DatabaseManager.getInstance().getAmountNeededForRestock(i);
+                int needed = database.getAmountNeededForRestock(i);
                 System.out.printf("%40s%10d", component.getString("name"), needed);
                 System.out.println();
             }
@@ -144,7 +145,7 @@ public class TextDriver {
     }
 
     private void printAllComponents() throws SQLException {
-        ResultSet rs = DatabaseManager.getInstance().getAllFromTable("components");
+        ResultSet rs = database.getAllFromTable("components");
         System.out.format("%40s%10s%14s", "Name", "Amount", "Type");
         System.out.println();
         while (rs.next()) {
@@ -154,17 +155,17 @@ public class TextDriver {
     }
 
     private void printAllSystems() throws SQLException {
-        ResultSet rs = DatabaseManager.getInstance().getAllFromTable("computersystems");
+        ResultSet rs = database.getAllFromTable("computersystems");
         System.out.format("%40s%10s", "Name", "Buildable");
         System.out.println();
         while (rs.next()) {
-            System.out.format("%40s%10d", rs.getString("name"), DatabaseManager.getInstance().getMaxSystemsBuildable(rs.getString("name")));
+            System.out.format("%40s%10d", rs.getString("name"), database.getMaxSystemsBuildable(rs.getString("name")));
             System.out.println();
         }
     }
 
     private void printComponentPrices() throws SQLException {
-        ResultSet allItems = DatabaseManager.getInstance().getAllComponentsOrdered();
+        ResultSet allItems = database.getAllComponentsOrdered();
         System.out.println("Components: \n");
         System.out.format("%40s%10s%14s", "Name", "Price", "Type");
         System.out.println();
@@ -175,20 +176,20 @@ public class TextDriver {
     }
 
     private void printSystemPrices() throws SQLException {
-        ResultSet allSystems = DatabaseManager.getInstance().getAllComputerSystems();
+        ResultSet allSystems = database.getAllComputerSystems();
         System.out.println("Systems: \n");
         System.out.println();
         while(allSystems.next()) {
-            if(DatabaseManager.getInstance().getMaxSystemsBuildable(allSystems.getString("name")) > 0) {
+            if(database.getMaxSystemsBuildable(allSystems.getString("name")) > 0) {
                 System.out.println(allSystems.getString("name"));
                 for (int i = 2; i < 7; i++) {
                     if (allSystems.getObject(i) != null) {
-                        ResultSet rs = DatabaseManager.getInstance().getComponent(allSystems.getInt(i));
+                        ResultSet rs = database.getComponent(allSystems.getInt(i));
                         rs.next();
                         System.out.println(" -> " + rs.getString("name"));
                     }
                 }
-                System.out.println("Total price: " + DatabaseManager.getInstance().getPriceForSystem(allSystems.getString("name")));
+                System.out.println("Total price: " + database.getPriceForSystem(allSystems.getString("name")));
                 System.out.println();
             }
         }

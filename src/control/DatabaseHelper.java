@@ -9,18 +9,18 @@ import java.sql.SQLException;
  * @author Niels Norberg
  */
 @SuppressWarnings("SqlResolve")
-public class DatabaseManager {
-    private static DatabaseManager instance;
+public class DatabaseHelper {
+    private static DatabaseHelper instance;
     private ConnectionDriver connectionDriver;
 
-    private DatabaseManager() {
+    private DatabaseHelper() {
         ConnectionDriver.getInstance().connect();
         connectionDriver = ConnectionDriver.getInstance();
     }
 
-    public static DatabaseManager getInstance() {
+    public static DatabaseHelper getInstance() {
         if (instance == null) {
-            instance = new DatabaseManager();
+            instance = new DatabaseHelper();
         }
         return instance;
     }
