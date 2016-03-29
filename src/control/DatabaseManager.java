@@ -186,7 +186,7 @@ public class DatabaseManager {
      * @throws SQLException
      */
     public ResultSet getComputerSystem(int systemID) throws SQLException {
-        return connectionDriver.executeQuery("SELECT * FROM computersystems WHERE systemid='%d';", systemID);
+        return connectionDriver.executeQuery("SELECT * FROM computersystems WHERE systemid=%d;", systemID);
     }
 
     /**
@@ -198,5 +198,9 @@ public class DatabaseManager {
         ResultSet rs = connectionDriver.executeQuery("SELECT max(systemid) FROM computersystems;");
         rs.next();
         return rs.getInt(1);
+    }
+
+    public ResultSet getAllComputerSystems() throws SQLException {
+        return connectionDriver.executeQuery("SELECT * from computersystems;");
     }
 }
