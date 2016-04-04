@@ -2,6 +2,7 @@ package control;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 
 /**
  * Created 3/22/16
@@ -44,6 +45,14 @@ public class DatabaseHelper {
             return connectionDriver.executeQuery("SELECT * FROM components NATURAL JOIN %s WHERE componentid=%d;", otherTable, componentId);
         }
         return component;
+    }
+
+    public int getPrice(int componentId) throws SQLException {
+        ResultSet rs = connectionDriver.executeQuery("SELECT * FROM components WHERE componentid=%d", componentId);
+        if(rs.next()) {
+            return rs.getInt("price");
+        }
+        throw new NoSuchElementException();
     }
 
     /**
