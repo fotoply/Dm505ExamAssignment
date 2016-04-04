@@ -56,7 +56,6 @@ public class DatabaseHelper {
      */
     public double getPrice(int componentId) throws SQLException, NoSuchElementException {
         ResultSet rs = connectionDriver.executeQuery("SELECT price FROM components WHERE componentid=%d", componentId);
-        rs.next();
         if(rs.next()) {
             return rs.getDouble("price");
         }
