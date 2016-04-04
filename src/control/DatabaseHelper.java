@@ -163,7 +163,7 @@ public class DatabaseHelper {
                 price += getPrice(rs.getInt(i)) * TextDriver.PRICEMULTIPLIER;
             }
         }
-        price = (int) (Math.ceil(price / 100) * 100) - 1;
+        price = (int) (((price+99) / 100) * 100) - 1;
         return price;
     }
 
