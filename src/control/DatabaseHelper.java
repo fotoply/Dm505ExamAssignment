@@ -47,10 +47,17 @@ public class DatabaseHelper {
         return component;
     }
 
-    public int getPrice(int componentId) throws SQLException {
+    /**
+     * Gets the price of component
+     * @param componentId the components id
+     * @return a double representing the price
+     * @throws SQLException
+     * @throws NoSuchElementException If the componentId does not exist.
+     */
+    public double getPrice(int componentId) throws SQLException, NoSuchElementException {
         ResultSet rs = connectionDriver.executeQuery("SELECT * FROM components WHERE componentid=%d", componentId);
         if(rs.next()) {
-            return rs.getInt("price");
+            return rs.getDouble("price");
         }
         throw new NoSuchElementException();
     }
