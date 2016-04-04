@@ -39,15 +39,18 @@ public class ConnectionDriver {
     public void executeUpdate(String sql, Object... args) throws SQLException {
         Statement statement = connection.createStatement();
         statement.executeUpdate(String.format(sql, args));
+        statement.close();
     }
 
     public boolean execute(String sql, Object... args) throws SQLException {
         Statement statement = connection.createStatement();
+        statement.closeOnCompletion();
         return statement.execute(String.format(sql, args));
     }
 
     public ResultSet executeQuery(String sql, Object... args) throws SQLException {
         Statement statement = connection.createStatement();
+        statement.closeOnCompletion();
         return statement.executeQuery(String.format(sql, args));
     }
 
