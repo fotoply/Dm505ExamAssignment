@@ -180,7 +180,7 @@ public class TextDriver {
         System.out.format("%40s%10s%14s", "Name", "Price", "Type");
         System.out.println();
         while (allItems.next()) {
-            System.out.format("%40s%10.1f%14s", allItems.getString("name"), allItems.getInt("price") * PRICEMULTIPLIER, allItems.getString("kind"));
+            System.out.format("%40s%10.1f%14s", allItems.getString("name"), allItems.getDouble("price") * PRICEMULTIPLIER, allItems.getString("kind"));
             System.out.println();
         }
     }
