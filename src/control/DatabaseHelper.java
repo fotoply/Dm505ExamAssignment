@@ -55,10 +55,12 @@ public class DatabaseHelper {
      * @throws NoSuchElementException If the componentId does not exist.
      */
     public double getPrice(int componentId) throws SQLException, NoSuchElementException {
-        ResultSet rs = connectionDriver.executeQuery("SELECT * FROM components WHERE componentid=%d", componentId);
+        ResultSet rs = connectionDriver.executeQuery("SELECT price FROM components WHERE componentid=%d", componentId);
+        rs.next();
         if(rs.next()) {
             return rs.getDouble("price");
         }
+
         throw new NoSuchElementException();
     }
 
@@ -159,9 +161,7 @@ public class DatabaseHelper {
         rs.next();
         for (int i = 2; i < 7; i++) {
             if (rs.getObject(i) != null) {
-                ResultSet rs2 = connectionDriver.executeQuery("SELECT price FROM components WHERE componentid=%d;", rs.getInt(i));
-                rs2.next();
-                price += rs2.getInt("price") * TextDriver.PRICEMULTIPLIER;
+                price += getPrice(rs.getInt(i)) * TextDriver.PRICEMULTIPLIER;
             }
         }
         price = (int) (Math.ceil(price / 100) * 100) - 1;
