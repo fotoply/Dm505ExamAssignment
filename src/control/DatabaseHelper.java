@@ -49,6 +49,7 @@ public class DatabaseHelper {
 
     /**
      * Gets the price of component
+     *
      * @param componentId the components id
      * @return a double representing the price
      * @throws SQLException
@@ -56,7 +57,7 @@ public class DatabaseHelper {
      */
     public double getPrice(int componentId) throws SQLException, NoSuchElementException {
         ResultSet rs = connectionDriver.executeQuery("SELECT price FROM components WHERE componentid=%d", componentId);
-        if(rs.next()) {
+        if (rs.next()) {
             return rs.getDouble("price");
         }
 
@@ -163,20 +164,21 @@ public class DatabaseHelper {
                 price += getPrice(rs.getInt(i)) * TextDriver.PRICEMULTIPLIER;
             }
         }
-        price = (int) (((price+99) / 100) * 100) - 1;
+        price = (int) (((price + 99) / 100) * 100) - 1;
         return price;
     }
 
     /**
      * Get the amount that needs to be bought to have filled up to prefered levels for a given component.
+     *
      * @param componentId the ID of the component
      * @return Returns the amount or 0 if there is equal to or more than the prefered level
      * @throws SQLException
      */
     public int getAmountNeededForRestock(int componentId) throws SQLException {
         int needed;
-        ResultSet rs = connectionDriver.executeQuery("SELECT sum(prefered-amount) FROM minimumstock,components WHERE minimumstock.componentid=%d AND components.componentid=%d;",componentId, componentId);
-        if(rs.next()) {
+        ResultSet rs = connectionDriver.executeQuery("SELECT sum(prefered-amount) FROM minimumstock,components WHERE minimumstock.componentid=%d AND components.componentid=%d;", componentId, componentId);
+        if (rs.next()) {
             needed = rs.getInt(1);
             return (needed <= 0) ? 0 : needed;
         }
@@ -185,6 +187,7 @@ public class DatabaseHelper {
 
     /**
      * Gets the max componentId in the system. There is no guarantee that all components below that number exists, but nothing exists above it.
+     *
      * @return the max ID
      * @throws SQLException
      */
@@ -196,6 +199,7 @@ public class DatabaseHelper {
 
     /**
      * Returns a computer system by id
+     *
      * @param systemID the ID of the system
      * @return
      * @throws SQLException
@@ -206,6 +210,7 @@ public class DatabaseHelper {
 
     /**
      * Gets the max systemId in the system. There is no guarantee that all system below that number exists, but nothing exists above it.
+     *
      * @return the max ID
      * @throws SQLException
      */
@@ -217,10 +222,11 @@ public class DatabaseHelper {
 
     /**
      * Get all computersystems in the database and all columns associated with them
+     *
      * @return A ResultSet with all the data of the computersystems table
      * @throws SQLException
      */
     public ResultSet getAllComputerSystems() throws SQLException {
-        return connectionDriver.executeQuery("SELECT * from computersystems;");
+        return connectionDriver.executeQuery("SELECT * FROM computersystems;");
     }
 }

@@ -55,7 +55,7 @@ public class ConnectionDriver {
     }
 
     public Connection getConnection() {
-        if(connection == null) {
+        if (connection == null) {
             connect();
         }
         return connection;

@@ -133,9 +133,9 @@ public class TextDriver {
     private void printRestockingList() throws SQLException {
         System.out.format("%40s%10s", "Name", "Needed");
         System.out.println();
-        for (int i = 1; i < database.getMaxComponentId()+1; i++) {
+        for (int i = 1; i < database.getMaxComponentId() + 1; i++) {
             ResultSet component = database.getComponent(i);
-            if(component.next()) {
+            if (component.next()) {
                 int needed = database.getAmountNeededForRestock(i);
                 System.out.printf("%40s%10d", component.getString("name"), needed);
                 System.out.println();
@@ -189,8 +189,8 @@ public class TextDriver {
         ResultSet allSystems = database.getAllComputerSystems();
         System.out.println("Systems: \n");
         System.out.println();
-        while(allSystems.next()) {
-            if(database.getMaxSystemsBuildable(allSystems.getString("name")) > 0) {
+        while (allSystems.next()) {
+            if (database.getMaxSystemsBuildable(allSystems.getString("name")) > 0) {
                 System.out.println(allSystems.getString("name"));
                 for (int i = 2; i < 7; i++) {
                     if (allSystems.getObject(i) != null) {
